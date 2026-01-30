@@ -21,7 +21,14 @@ export class Service {
     this.storage = new Storage(this.client);
   }
 
-  async createPost({ title, content, featuredImage, status, userId }: Post) {
+  async createPost({
+    title,
+    slug,
+    content,
+    featuredImage,
+    status,
+    userId,
+  }: Post) {
     try {
       return await this.tablesDB.createRow({
         databaseId: conf.appwriteDatabaseId,
@@ -30,16 +37,17 @@ export class Service {
 
         data: {
           title,
+          slug,
           content,
           featuredImage,
           status,
           userId,
         },
       });
-      return true;
     } catch (error) {
       console.error("Appwrite service :: createPost :: error", error);
-      throw error; // Or return false
+      // throw error; // Or return false
+      return false;
     }
   }
   async deletePost(id: string) {
@@ -57,7 +65,7 @@ export class Service {
   }
   async updatePost(
     id: string,
-    { title, content, featuredImage, status, userId }: Post,
+    { title, slug, content, featuredImage, status, userId }: Post,
   ) {
     try {
       return await this.tablesDB.updateRow({
@@ -67,6 +75,7 @@ export class Service {
 
         data: {
           title,
+          slug,
           content,
           featuredImage,
           status,

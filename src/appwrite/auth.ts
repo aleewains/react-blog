@@ -1,7 +1,7 @@
 import conf from "../conf/conf";
 import { Client, Account, ID } from "appwrite";
 interface User {
-  id: string;
+  // id: string;
   email: string;
   password: string;
   name?: string | undefined;
@@ -35,8 +35,9 @@ export class AuthService {
       } else {
         return user;
       }
-    } catch (e) {
-      throw e;
+    } catch (error) {
+      console.log("Appwrite service :: createUser :: User not created", error);
+      throw error;
     }
   }
 
@@ -48,6 +49,7 @@ export class AuthService {
       });
       return account;
     } catch (error) {
+      console.log("Appwrite service :: LoginUser :: User not Login", error);
       throw error;
     }
   }
@@ -56,7 +58,10 @@ export class AuthService {
     try {
       return await this.account.get();
     } catch (error) {
-      console.log(error);
+      console.log(
+        "Appwrite service :: getCurrentUser :: No active session found",
+        error,
+      );
     }
     return null;
   }
