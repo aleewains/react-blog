@@ -11,7 +11,6 @@ interface PostFormData {
   slug: string;
   content: string;
   status: "active" | "inactive";
-  featuredImage: string;
   image: FileList | undefined;
 }
 export interface Post {
@@ -35,7 +34,6 @@ function PostForm({ post }: PostFormProps) {
         slug: post?.slug || "",
         content: post?.content || "",
         status: post?.status || "active",
-        featuredImage: post?.featuredImage || undefined,
         image: undefined,
       },
     });
@@ -43,10 +41,17 @@ function PostForm({ post }: PostFormProps) {
   const navigate = useNavigate();
   const userData = useSelector((state: RootState) => state.auth.userData);
 
-  const submit = async (data: PostFormData) => {
+  const submit = async (data: PostFormData): Promise<void> => {
+    const basePayload = {
+      title: data.title,
+      slug: data.slug,
+      content: data.content,
+      status: data.status,
+    };
+
     if (post) {
       //getting new image and upload into storage this will return a fileid
-      const file: any =
+      const file =
         data.image && data.image[0]
           ? await appWriteService.uploadFile(data.image[0])
           : null;
@@ -54,36 +59,33 @@ function PostForm({ post }: PostFormProps) {
       if (file) {
         await appWriteService.deleteFile(post.featuredImage);
       }
-      // updating the post
-      const dbPost = await appWriteService.updatePost(post.$id, {
-        title: data.title,
-        slug: data.slug,
-        content: data.content,
-        status: data.status,
+
+      const payload: Partial<Post> = {
+        ...basePayload,
         featuredImage: file ? file.$id : post.featuredImage,
-        userId: userData.$id,
-      });
+      };
+      // updating the post
+      const dbPost = await appWriteService.updatePost(post.$id, payload);
       if (dbPost) {
         navigate(`/post/${dbPost.$id}`);
       }
     } else {
-      const file: any =
+      const file =
         data.image && data.image[0]
           ? await appWriteService.uploadFile(data.image[0])
           : null;
 
       if (file) {
         const fileId = file.$id;
-        data.featuredImage = fileId;
+        // data.featuredImage = fileId;
         // we cannot simply spread ...data because it contains the image property which is a FileList. Appwrite's database service would reject that.
-        const dbPost = await appWriteService.createPost({
-          title: data.title,
-          slug: data.slug,
-          content: data.content,
-          status: data.status,
-          featuredImage: data.featuredImage,
+
+        const payload = {
+          ...basePayload,
+          featuredImage: fileId,
           userId: userData.$id,
-        });
+        };
+        const dbPost = await appWriteService.createPost(payload);
         if (dbPost) {
           navigate(`/post/${dbPost.$id}`);
         }

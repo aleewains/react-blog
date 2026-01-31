@@ -65,7 +65,7 @@ export class Service {
   }
   async updatePost(
     id: string,
-    { title, slug, content, featuredImage, status, userId }: Post,
+    { title, slug, content, featuredImage, status, userId }: Partial<Post>,
   ) {
     try {
       return await this.tablesDB.updateRow({
