@@ -36,12 +36,12 @@ export class Service {
         rowId: ID.unique(),
 
         data: {
+          userId,
           title,
           slug,
           content,
           featuredImage,
           status,
-          userId,
         },
       });
     } catch (error) {
