@@ -42,90 +42,89 @@ function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] w-full px-4">
-      {/* Editorial Header */}
-      <div className="mb-10 text-center">
-        <div className="flex justify-center mb-6">
-          <Logo width="60px" />
+    <div className="w-full">
+      {/* Branding - Hidden on larger screens if your Page header already has it */}
+      <div className="mb-8 lg:mb-12">
+        <div className="lg:hidden flex justify-center mb-6">
+          <Logo width="48px" />
         </div>
         <h1 className="font-heading text-4xl md:text-5xl text-text-primary tracking-tight">
           Welcome back.
         </h1>
-        <p className="mt-4 text-text-secondary font-sans text-sm tracking-wide uppercase">
-          Enter your details to access the journal
+        <p className="mt-3 text-text-secondary font-sans text-sm tracking-wide">
+          Enter your credentials to access the studio.
         </p>
       </div>
 
-      <div className="w-full max-w-[440px] bg-bg-secondary rounded-2xl border border-border-default p-8 md:p-10 shadow-premium">
-        {error && (
-          <div className="mb-6 flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm animate-in fade-in slide-in-from-top-1">
-            <AlertCircle size={18} />
-            <p>{error}</p>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit(login)} className="space-y-6">
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <Input
-                label="Email Address"
-                placeholder="name@example.com"
-                type="email"
-                className="bg-bg-primary/50"
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-                    message: "Please enter a valid email address",
-                  },
-                })}
-              />
-              {errors.email && (
-                <span className="text-[11px] text-red-500 ml-1 uppercase tracking-tighter">
-                  {errors.email.message}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-1">
-              <Input
-                label="Password"
-                type="password"
-                placeholder="••••••••"
-                className="bg-bg-primary/50"
-                {...register("password", {
-                  required: "Password is required",
-                })}
-              />
-              {errors.password && (
-                <span className="text-[11px] text-red-500 ml-1 uppercase tracking-tighter">
-                  {errors.password.message}
-                </span>
-              )}
-            </div>
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full h-12 text-sm uppercase tracking-widest font-bold"
-            isLoading={isLoading}
-            leftIcon={!isLoading && <LogIn size={18} />}
-          >
-            Sign In
-          </Button>
-        </form>
-
-        <div className="mt-8 pt-6 border-t border-border-subtle text-center">
-          <p className="text-sm text-text-muted">
-            New to the platform?&nbsp;
-            <Link
-              to="/signup"
-              className="text-accent font-semibold hover:text-accent-hover transition-colors underline underline-offset-4"
-            >
-              Create an account
-            </Link>
-          </p>
+      {error && (
+        <div className="mb-6 flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm">
+          <AlertCircle size={18} />
+          <p>{error}</p>
         </div>
+      )}
+
+      <form onSubmit={handleSubmit(login)} className="space-y-6">
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <Input
+              label="Email Address"
+              placeholder="name@example.com"
+              type="email"
+              // Adding a subtle background to inputs to stand out on the white page
+              className="bg-bg-secondary/50 border-border-subtle focus:bg-white transition-all"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+                  message: "Please enter a valid email address",
+                },
+              })}
+            />
+            {errors.email && (
+              <span className="text-[10px] text-red-500 uppercase tracking-widest font-bold ml-1">
+                {errors.email.message}
+              </span>
+            )}
+          </div>
+
+          <div className="space-y-1">
+            <Input
+              label="Password"
+              type="password"
+              placeholder="••••••••"
+              className="bg-bg-secondary/50 border-border-subtle focus:bg-white transition-all"
+              {...register("password", {
+                required: "Password is required",
+              })}
+            />
+            {errors.password && (
+              <span className="text-[10px] text-red-500 uppercase tracking-widest font-bold ml-1">
+                {errors.password.message}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full h-12 text-xs uppercase tracking-[0.2em] font-bold shadow-lg shadow-accent/10"
+          isLoading={isLoading}
+          leftIcon={!isLoading && <LogIn size={16} />}
+        >
+          Sign In
+        </Button>
+      </form>
+
+      <div className="mt-10 pt-8 border-t border-border-subtle">
+        <p className="text-sm text-text-muted">
+          New to the journal?&nbsp;
+          <Link
+            to="/signup"
+            className="text-text-primary font-bold hover:text-accent transition-colors underline underline-offset-8 decoration-accent/30 hover:decoration-accent"
+          >
+            Create an account
+          </Link>
+        </p>
       </div>
     </div>
   );

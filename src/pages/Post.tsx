@@ -67,7 +67,7 @@ export default function Post() {
                 <Link to={`/edit-post/${post.$id}`}>
                   <Button
                     variant="secondary"
-                    className="px-4 py-1.5 text-xs gap-2"
+                    className="px-4 py-1.5 text-xs gap-2 "
                   >
                     <Edit3 size={14} /> Edit
                   </Button>

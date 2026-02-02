@@ -14,6 +14,7 @@ interface PostFormData {
   status: "active" | "inactive";
   image: FileList | undefined;
 }
+
 export interface Post {
   $id: string;
   title: string;
@@ -23,12 +24,14 @@ export interface Post {
   featuredImage: string;
   userId: string;
 }
+
 interface PostFormProps {
   post?: Post;
 }
 
 function PostForm({ post }: PostFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [preview, setPreview] = useState<string | null>(null); // State for live preview
   const navigate = useNavigate();
   const userData = useSelector((state: RootState) => state.auth.userData);
 
@@ -41,6 +44,20 @@ function PostForm({ post }: PostFormProps) {
         status: post?.status || "active",
       },
     });
+
+  // Watch the image field to generate a preview URL
+  const watchedImage = watch("image");
+
+  useEffect(() => {
+    if (watchedImage && watchedImage.length > 0) {
+      const file = watchedImage[0];
+      const previewUrl = URL.createObjectURL(file);
+      setPreview(previewUrl);
+
+      // Clean up memory
+      return () => URL.revokeObjectURL(previewUrl);
+    }
+  }, [watchedImage]);
 
   const submit = async (data: PostFormData) => {
     setIsSubmitting(true);
@@ -103,8 +120,7 @@ function PostForm({ post }: PostFormProps) {
   }, [watch, slugTransform, setValue]);
 
   return (
-    <form onSubmit={handleSubmit(submit)} className="max-w-6xl mx-auto">
-      {/* Editorial Header */}
+    <form onSubmit={handleSubmit(submit)} className="max-w-6xl mx-auto pb-20">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
         <div>
           <span className="text-accent text-[10px] uppercase tracking-[0.3em] font-bold">
@@ -128,7 +144,6 @@ function PostForm({ post }: PostFormProps) {
       </header>
 
       <div className="grid gap-12 lg:grid-cols-[1fr_380px]">
-        {/* Main Composition Area */}
         <section className="space-y-10">
           <div className="space-y-1">
             <label className="text-[11px] uppercase tracking-widest text-text-muted font-bold ml-1">
@@ -170,44 +185,55 @@ function PostForm({ post }: PostFormProps) {
           </div>
         </section>
 
-        {/* Configuration Sidebar */}
         <aside className="space-y-8">
-          <div className="sticky top-8 space-y-8">
+          <div className="sticky top-20 space-y-8 ">
             {/* Media Upload Box */}
-            <div className="group relative rounded-2xl border-2 border-dashed border-border-default p-8 text-center hover:border-accent transition-colors bg-bg-secondary shadow-sm">
+            <div className="group relative rounded-2xl border-2 border-dashed border-border-default p-8 text-center hover:border-accent transition-colors bg-bg-secondary shadow-sm overflow-hidden">
               <Input
                 label="Featured Image"
                 type="file"
                 accept="image/*"
-                className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                className="absolute inset-0 opacity-0 cursor-pointer z-20"
                 {...register("image", { required: !post })}
               />
-              <div className="space-y-4">
-                <div className="mx-auto w-12 h-12 rounded-full bg-accent-soft flex items-center justify-center text-accent">
-                  <ImagePlus size={24} />
-                </div>
-                <div className="text-sm">
-                  <span className="text-text-primary font-semibold block">
-                    Click to upload image
-                  </span>
-                  <span className="text-text-muted text-xs">
-                    High resolution recommended
-                  </span>
-                </div>
-              </div>
 
-              {post && (
-                <div className="mt-6 rounded-lg overflow-hidden border border-border-subtle shadow-premium">
+              {/* Conditional UI based on if an image exists */}
+              {!preview && !post && (
+                <div className="space-y-4">
+                  <div className="mx-auto w-12 h-12 rounded-full bg-accent-soft flex items-center justify-center text-accent">
+                    <ImagePlus size={24} />
+                  </div>
+                  <div className="text-sm">
+                    <span className="text-text-primary font-semibold block">
+                      Click to upload image
+                    </span>
+                    <span className="text-text-muted text-xs">
+                      High resolution recommended
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Display either the New Preview or the Existing Image */}
+              {(preview || post) && (
+                <div className="relative rounded-lg overflow-hidden border border-border-subtle shadow-premium z-10">
                   <img
-                    src={appWriteService.getFileView(post.featuredImage)}
+                    src={
+                      preview ||
+                      appWriteService.getFileView(post?.featuredImage!)
+                    }
                     alt="Preview"
                     className="w-full aspect-video object-cover"
                   />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p className="text-white text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                      <ImagePlus size={14} /> Change Image
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
 
-            {/* Status Selection */}
             <div className="rounded-2xl border border-border-subtle bg-bg-secondary p-6 shadow-soft space-y-4">
               <Select
                 options={["active", "inactive"]}

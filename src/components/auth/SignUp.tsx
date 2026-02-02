@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import authService from "../../appwrite/auth";
 import { login as authLogin } from "../../redux/authSlice";
 import { Logo, Input, Button } from "../index";
-import { Link } from "react-router-dom";
+import { UserPlus, AlertCircle } from "lucide-react";
 
 type Inputs = {
   name: string;
@@ -17,89 +17,137 @@ function SignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
-    // watch,
     formState: { errors },
   } = useForm<Inputs>();
 
-  const signup = async (data: Inputs) => {
+  const create = async (data: Inputs) => {
     setError("");
+    setIsLoading(true);
     try {
-      const session = await authService.createAccount(data);
-      if (session) {
-        const userData = await authService.getCurrentUser();
-        if (userData) dispatch(authLogin({ userData }));
+      const userData = await authService.createAccount(data);
+      if (userData) {
+        const currentUser = await authService.getCurrentUser();
+        if (currentUser) dispatch(authLogin(currentUser));
         navigate("/");
       }
-    } catch (error: any) {
-      setError(error.message || "An error occurred during signUp");
+    } catch (err: any) {
+      setError(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center w-full">
-      <div
-        className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}
-      >
-        <div className="mb-2 flex justify-center">
-          <span className="inline-block w-full max-w-25">
-            <Logo width="100%" />
-          </span>
+    <div className="w-full">
+      {/* Editorial Header */}
+      <div className="mb-10 lg:mb-12">
+        <div className="lg:hidden flex justify-center mb-6">
+          <Logo width="50px" />
         </div>
-        <h2 className="text-center text-2xl font-bold leading-tight">
-          Sign Up to your account
-        </h2>
-        <p className="mt-2 text-center text-base text-black/60">
-          Already have any account?&nbsp;
-          <Link
-            to="/login"
-            className="font-medium text-primary transition-all duration-200 hover:underline"
-          >
-            Sign Up
-          </Link>
+        <h1 className="font-heading text-4xl md:text-5xl text-text-primary tracking-tight">
+          Begin your journey.
+        </h1>
+        <p className="mt-3 text-text-secondary font-sans text-sm tracking-wide">
+          Join our community of refined perspectives.
         </p>
-        {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
-        <form onSubmit={handleSubmit(signup)} className="mt-8">
-          <div className="space-y-5">
+      </div>
+
+      {error && (
+        <div className="mb-6 flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm">
+          <AlertCircle size={18} />
+          <p>{error}</p>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit(create)} className="space-y-6">
+        <div className="space-y-4">
+          <div className="space-y-1">
             <Input
-              label="Name: "
-              placeholder="Enter your Name"
-              type="text"
-              {...register("name", {
-                required: true,
-              })}
+              label="Full Name"
+              placeholder="E.g. Alexander Rossi"
+              className="bg-bg-secondary/50 border-border-subtle focus:bg-white transition-all"
+              {...register("name", { required: "Name is required" })}
             />
+            {errors.name && (
+              <span className="text-[10px] text-red-500 uppercase tracking-widest font-bold ml-1">
+                {errors.name.message}
+              </span>
+            )}
+          </div>
+
+          <div className="space-y-1">
             <Input
-              label="Email: "
-              placeholder="Enter your email"
+              label="Email Address"
+              placeholder="name@example.com"
               type="email"
+              className="bg-bg-secondary/50 border-border-subtle focus:bg-white transition-all"
               {...register("email", {
-                required: true,
-                validate: {
-                  matchPatern: (value) =>
-                    /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-                    "Email address must be a valid address",
+                required: "Email is required",
+                pattern: {
+                  value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+                  message: "Please enter a valid email address",
                 },
               })}
             />
-            {errors.email && <span>This field is required</span>}
+            {errors.email && (
+              <span className="text-[10px] text-red-500 uppercase tracking-widest font-bold ml-1">
+                {errors.email.message}
+              </span>
+            )}
+          </div>
+
+          <div className="space-y-1">
             <Input
-              label="Password: "
+              label="Password"
               type="password"
-              placeholder="Enter your password"
+              placeholder="Minimum 8 characters"
+              className="bg-bg-secondary/50 border-border-subtle focus:bg-white transition-all"
               {...register("password", {
-                required: true,
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters",
+                },
               })}
             />
-            {errors.password && <span>This field is required</span>}
-            <Button type="submit" className="w-full">
-              Sign Up
-            </Button>
+            {errors.password && (
+              <span className="text-[10px] text-red-500 uppercase tracking-widest font-bold ml-1">
+                {errors.password.message}
+              </span>
+            )}
           </div>
-        </form>
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full h-12 text-xs uppercase tracking-[0.2em] font-bold shadow-lg shadow-accent/10 mt-2"
+          isLoading={isLoading}
+          leftIcon={!isLoading && <UserPlus size={16} />}
+        >
+          Create Account
+        </Button>
+      </form>
+
+      <div className="mt-10 pt-8 border-t border-border-subtle">
+        <p className="text-sm text-text-muted">
+          Already a member?&nbsp;
+          <Link
+            to="/login"
+            className="text-text-primary font-bold hover:text-accent transition-colors underline underline-offset-8 decoration-accent/30 hover:decoration-accent"
+          >
+            Sign In
+          </Link>
+        </p>
+
+        <p className="mt-8 text-[10px] text-text-muted uppercase tracking-[0.2em] leading-relaxed max-w-xs">
+          By joining, you agree to our terms of service and editorial
+          guidelines.
+        </p>
       </div>
     </div>
   );

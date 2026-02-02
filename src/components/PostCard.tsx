@@ -45,7 +45,7 @@ function PostCard({ $id, title, featuredImage, $createdAt }: Post) {
             <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-accent">
               Perspective
             </span>
-            <span className="h-[1px] w-8 bg-border-default"></span>
+            <span className="h-px w-8 bg-border-default"></span>
             <time className="text-[10px] uppercase tracking-[0.15em] text-text-muted">
               {date}
             </time>

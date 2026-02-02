@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Container, PostCard } from "../components";
 import service from "../appwrite/config";
 import { ArrowRight } from "lucide-react";
+import { useSelector } from "react-redux";
+import type { RootState } from "../redux/store";
 
 // 1. Define the single Post structure
 interface Post {
@@ -17,19 +19,19 @@ function Home() {
   // 2. Set state to be an array of Post objects
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const authStatus = useSelector((state: RootState) => state.auth.status);
 
   useEffect(() => {
     // service.getAllPosts should return the Appwrite Documents object
     service.getAllPosts([]).then((response) => {
       if (response) {
-        // Appwrite returns documents in a 'documents' array, not 'rows'
         setPosts(response.rows);
       }
       setLoading(false);
     });
   }, []);
 
-  if (!loading && posts.length === 0) {
+  if (!authStatus) {
     return (
       <div className="w-full py-24 text-center border-b border-border-subtle">
         <Container>
