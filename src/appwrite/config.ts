@@ -101,12 +101,13 @@ export class Service {
       return false;
     }
   }
-  async getAllPosts() {
+  async getAllPosts(queries = [Query.equal("status", "active")]) {
     try {
       return await this.tablesDB.listRows({
         databaseId: conf.appwriteDatabaseId,
         tableId: conf.appwriteCollectionId,
-        queries: [Query.equal("status", "active")],
+        queries,
+        // queries: [Query.equal("status", "active")],
         // transactionId: "<TRANSACTION_ID>", // optional
         // total: false, // optional
       });
@@ -142,22 +143,31 @@ export class Service {
   }
 
   getFilePreview(fileId: string) {
-    return this.storage.getFilePreview({
-      bucketId: conf.appwriteBucketId,
-      fileId: fileId,
-      //   width: 0, // optional
-      //   height: 0, // optional
-      //   gravity: ImageGravity.Center, // optional
-      //   quality: -1, // optional
-      //   borderWidth: 0, // optional
-      //   borderColor: "", // optional
-      //   borderRadius: 0, // optional
-      //   opacity: 0, // optional
-      //   rotation: -360, // optional
-      //   background: "", // optional
-      //   output: ImageFormat.Jpg, // optional
-      //   token: "<TOKEN>", // optional
-    });
+    try {
+      const previewid = this.storage.getFilePreview({
+        bucketId: conf.appwriteBucketId,
+        fileId: fileId,
+      });
+      console.log(previewid.toString());
+      return previewid;
+    } catch (error) {
+      console.log("Appwrite service :: getFilePreview :: error", error);
+      return ""; // Return empty string to avoid broken src
+    }
+  }
+
+  getFileView(fileId: string) {
+    try {
+      const previewid = this.storage.getFileView({
+        bucketId: conf.appwriteBucketId,
+        fileId: fileId,
+      });
+      console.log(previewid.toString());
+      return previewid;
+    } catch (error) {
+      console.log("Appwrite service :: getFilePreview :: error", error);
+      return ""; // Return empty string to avoid broken src
+    }
   }
 }
 

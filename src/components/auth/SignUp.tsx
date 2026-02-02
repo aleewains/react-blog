@@ -13,7 +13,7 @@ type Inputs = {
   password: string;
 };
 
-function Login() {
+function SignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [error, setError] = useState("");
@@ -105,4 +105,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default SignUp;

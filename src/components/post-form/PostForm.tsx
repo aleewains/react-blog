@@ -1,10 +1,11 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import appWriteService from "../../appwrite/config";
 import { Button, Input, RTE, Select } from "../index";
 import { type RootState } from "../../redux/store";
+import { ImagePlus, Send, Save } from "lucide-react";
 
 interface PostFormData {
   title: string;
@@ -27,6 +28,10 @@ interface PostFormProps {
 }
 
 function PostForm({ post }: PostFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+  const userData = useSelector((state: RootState) => state.auth.userData);
+
   const { register, handleSubmit, watch, setValue, getValues, control } =
     useForm<PostFormData>({
       defaultValues: {
@@ -34,75 +39,55 @@ function PostForm({ post }: PostFormProps) {
         slug: post?.slug || "",
         content: post?.content || "",
         status: post?.status || "active",
-        image: undefined,
       },
     });
 
-  const navigate = useNavigate();
-  const userData = useSelector((state: RootState) => state.auth.userData);
-
-  const submit = async (data: PostFormData): Promise<void> => {
-    const basePayload = {
-      title: data.title,
-      slug: data.slug,
-      content: data.content,
-      status: data.status,
-    };
-
-    if (post) {
-      //getting new image and upload into storage this will return a fileid
-      const file =
-        data.image && data.image[0]
-          ? await appWriteService.uploadFile(data.image[0])
-          : null;
-      //deleting old image file
-      if (file) {
-        await appWriteService.deleteFile(post.featuredImage);
-      }
-
-      const payload: Partial<Post> = {
-        ...basePayload,
-        featuredImage: file ? file.$id : post.featuredImage,
+  const submit = async (data: PostFormData) => {
+    setIsSubmitting(true);
+    try {
+      const basePayload = {
+        title: data.title,
+        slug: data.slug,
+        content: data.content,
+        status: data.status,
       };
-      // updating the post
-      const dbPost = await appWriteService.updatePost(post.$id, payload);
-      if (dbPost) {
-        navigate(`/post/${dbPost.$id}`);
-      }
-    } else {
-      const file =
-        data.image && data.image[0]
+
+      if (post) {
+        const file = data.image?.[0]
           ? await appWriteService.uploadFile(data.image[0])
           : null;
+        if (file) await appWriteService.deleteFile(post.featuredImage);
 
-      if (file) {
-        const fileId = file.$id;
-        // data.featuredImage = fileId;
-        // we cannot simply spread ...data because it contains the image property which is a FileList. Appwrite's database service would reject that.
-
-        const payload = {
+        const dbPost = await appWriteService.updatePost(post.$id, {
           ...basePayload,
-          featuredImage: fileId,
-          userId: userData.$id,
-        };
-        const dbPost = await appWriteService.createPost(payload);
-        if (dbPost) {
-          navigate(`/post/${dbPost.$id}`);
+          featuredImage: file ? file.$id : post.featuredImage,
+        });
+        if (dbPost) navigate(`/post/${dbPost.$id}`);
+      } else {
+        const file = data.image?.[0]
+          ? await appWriteService.uploadFile(data.image[0])
+          : null;
+        if (file) {
+          const dbPost = await appWriteService.createPost({
+            ...basePayload,
+            featuredImage: file.$id,
+            userId: userData.$id,
+          });
+          if (dbPost) navigate(`/post/${dbPost.$id}`);
         }
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  //slug Transform
   const slugTransform = useCallback((value: string) => {
-    // if (value && typeof value === "string ") {
-    if (value) {
+    if (value)
       return value
         .trim()
         .toLowerCase()
-        .replace(/[^a-zA-Z\d\s]+/g, "-") // Replace anything NOT a letter, number, or space
+        .replace(/[^a-zA-Z\d\s]+/g, "-")
         .replace(/\s/g, "-");
-    }
     return "";
   }, []);
 
@@ -116,63 +101,127 @@ function PostForm({ post }: PostFormProps) {
     });
     return () => subscription.unsubscribe();
   }, [watch, slugTransform, setValue]);
+
   return (
-    <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
-      <div className="w-2/3 px-2">
-        <Input
-          label="Title :"
-          placeholder="Title"
-          className="mb-4"
-          {...register("title", { required: true })}
-        />
-        <Input
-          label="Slug :"
-          placeholder="Slug"
-          className="mb-4"
-          {...register("slug", { required: true })}
-          onInput={(e) => {
-            setValue("slug", slugTransform(e.currentTarget.value || ""), {
-              shouldValidate: true,
-            });
-          }}
-        />
-        <RTE
-          label="Content :"
-          name="content"
-          control={control}
-          defaultValue={getValues("content")}
-        />
-      </div>
-      <div className="w-1/3 px-2">
-        <Input
-          label="Featured Image :"
-          type="file"
-          className="mb-4"
-          accept="image/png, image/jpg, image/jpeg, image/gif"
-          {...register("image", { required: !post })}
-        />
-        {post && (
-          <div className="w-full mb-4">
-            <img
-              src={appWriteService.getFilePreview(post.featuredImage)}
-              alt={post.title}
-              className="rounded-lg"
+    <form onSubmit={handleSubmit(submit)} className="max-w-6xl mx-auto">
+      {/* Editorial Header */}
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+        <div>
+          <span className="text-accent text-[10px] uppercase tracking-[0.3em] font-bold">
+            Studio Mode
+          </span>
+          <h1 className="text-4xl font-heading text-text-primary mt-2">
+            {post ? "Edit Masterpiece" : "New Perspective"}
+          </h1>
+        </div>
+        <div className="flex items-center gap-4 w-full md:w-auto">
+          <Button
+            type="submit"
+            isLoading={isSubmitting}
+            variant={post ? "secondary" : "primary"}
+            className="flex-1 md:flex-none px-8"
+            leftIcon={post ? <Save size={18} /> : <Send size={18} />}
+          >
+            {post ? "Update Entry" : "Publish to Journal"}
+          </Button>
+        </div>
+      </header>
+
+      <div className="grid gap-12 lg:grid-cols-[1fr_380px]">
+        {/* Main Composition Area */}
+        <section className="space-y-10">
+          <div className="space-y-1">
+            <label className="text-[11px] uppercase tracking-widest text-text-muted font-bold ml-1">
+              Article Title
+            </label>
+            <input
+              {...register("title", { required: true })}
+              placeholder="Enter a captivating title..."
+              className="w-full bg-transparent border-b border-border-default py-4 text-3xl font-heading focus:border-accent focus:outline-none transition-colors placeholder:text-text-muted/30"
             />
           </div>
-        )}
-        <Select
-          options={["active", "inactive"]}
-          label="Status"
-          className="mb-4"
-          {...register("status", { required: true })}
-        />
-        <Button
-          type="submit"
-          bgColor={post ? "bg-green-500" : undefined}
-          className="w-full"
-        >
-          {post ? "Update" : "Submit"}
-        </Button>
+
+          <div className="space-y-1">
+            <label className="text-[11px] uppercase tracking-widest text-text-muted font-bold ml-1">
+              URL Identifier (Slug)
+            </label>
+            <Input
+              placeholder="post-url-handle"
+              className="bg-bg-muted/50 border-none font-mono text-xs"
+              {...register("slug", { required: true })}
+              onInput={(e) =>
+                setValue("slug", slugTransform(e.currentTarget.value), {
+                  shouldValidate: true,
+                })
+              }
+            />
+          </div>
+
+          <div className="prose-editor">
+            <label className="text-[11px] uppercase tracking-widest text-text-muted font-bold ml-1 mb-4 block">
+              Body Content
+            </label>
+            <RTE
+              label="Content"
+              name="content"
+              control={control}
+              defaultValue={getValues("content")}
+            />
+          </div>
+        </section>
+
+        {/* Configuration Sidebar */}
+        <aside className="space-y-8">
+          <div className="sticky top-8 space-y-8">
+            {/* Media Upload Box */}
+            <div className="group relative rounded-2xl border-2 border-dashed border-border-default p-8 text-center hover:border-accent transition-colors bg-bg-secondary shadow-sm">
+              <Input
+                label="Featured Image"
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                {...register("image", { required: !post })}
+              />
+              <div className="space-y-4">
+                <div className="mx-auto w-12 h-12 rounded-full bg-accent-soft flex items-center justify-center text-accent">
+                  <ImagePlus size={24} />
+                </div>
+                <div className="text-sm">
+                  <span className="text-text-primary font-semibold block">
+                    Click to upload image
+                  </span>
+                  <span className="text-text-muted text-xs">
+                    High resolution recommended
+                  </span>
+                </div>
+              </div>
+
+              {post && (
+                <div className="mt-6 rounded-lg overflow-hidden border border-border-subtle shadow-premium">
+                  <img
+                    src={appWriteService.getFileView(post.featuredImage)}
+                    alt="Preview"
+                    className="w-full aspect-video object-cover"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Status Selection */}
+            <div className="rounded-2xl border border-border-subtle bg-bg-secondary p-6 shadow-soft space-y-4">
+              <Select
+                options={["active", "inactive"]}
+                label="Visibility Status"
+                className="w-full"
+                {...register("status", { required: true })}
+              />
+              <p className="text-[10px] text-text-muted leading-relaxed italic">
+                Active posts are immediately visible to the public. Inactive
+                posts are saved as drafts.
+              </p>
+            </div>
+          </div>
+        </aside>
       </div>
     </form>
   );

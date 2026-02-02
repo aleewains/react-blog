@@ -1,5 +1,6 @@
 import { Editor } from "@tinymce/tinymce-react";
 import { Controller } from "react-hook-form";
+import conf from "../conf/conf";
 interface TypeRTE {
   name: string;
   control: any;
@@ -15,7 +16,7 @@ function RTE({ name, control, label, defaultValue = "" }: TypeRTE) {
         control={control}
         render={({ field: { onChange, value } }) => (
           <Editor
-            apiKey="no-api-key"
+            apiKey={conf.tinymceapi}
             initialValue={defaultValue}
             value={value}
             init={{

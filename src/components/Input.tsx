@@ -11,9 +11,9 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 function Input({ label, type, className = "", ref, ...props }: InputProps) {
   const id = useId();
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col">
       {label && (
-        <label htmlFor={id} className="inline-block mb-1 pl-1">
+        <label htmlFor={id} className="inline-block mb-1 pl-1 text-left">
           {label}
         </label>
       )}

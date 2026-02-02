@@ -1,41 +1,56 @@
 import { useEffect, useState } from "react";
-import "./App.css";
 import { useDispatch } from "react-redux";
 import authService from "./appwrite/auth";
 import { login, logout } from "./redux/authSlice";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import { Outlet } from "react-router-dom";
+import { Loader2 } from "lucide-react"; // Import a clean icon
 
 function App() {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
-  //when fisrt load we check user status
+
   useEffect(() => {
     authService
-      .getCurrentUser() //this this will user status
+      .getCurrentUser()
       .then((userData) => {
-        console.log(userData, "userData");
         if (userData) {
-          dispatch(login({ userData })); //if user exist then change the state in store
+          dispatch(login({ userData }));
         } else {
-          dispatch(logout()); //if not exist then atleast logout the user to maintain state
+          dispatch(logout());
         }
       })
-      .finally(() => setLoading(false)); // also update this for conditional rendering
-  }, []);
-  return !loading ? (
-    <div className="min-h-secreen flex flex-wrap flex-col content-between bg-amber-50">
-      <div className="w-full block text-center">
-        <Header />
-        <main>
-          <Outlet />
-        </main>
-        <Footer />
+      .finally(() => {
+        // Subtle delay to prevent a "flash" of the loader on fast connections
+        setTimeout(() => setLoading(false), 400);
+      });
+  }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-bg-primary animate-pulse">
+        <Loader2 className="w-6 h-6 text-accent animate-spin mb-4" />
+        <span className="text-xs uppercase tracking-[0.2em] text-text-muted font-sans">
+          Initializing
+        </span>
       </div>
+    );
+  }
+
+  return (
+    // 'antialiased' makes Inter and Playfair look much sharper on high-res screens
+    <div className="min-h-screen flex flex-col bg-bg-primary text-text-primary antialiased">
+      <Header />
+
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="animate-in fade-in duration-700">
+          <Outlet />
+        </div>
+      </main>
+
+      <Footer />
     </div>
-  ) : (
-    <div className="bg-amber-300 text">Loading</div>
   );
 }
 

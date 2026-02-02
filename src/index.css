@@ -1,24 +1,43 @@
 @import "tailwindcss";
 
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  box-sizing: border-box;
+@theme {
+  /* Colors */
+  --color-bg-primary: #fafafb;
+  --color-bg-secondary: #ffffff;
+  --color-bg-muted: #f1f3f5;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --color-text-primary: #0e0f12;
+  --color-text-secondary: #444a57;
+  --color-text-muted: #6b7280;
+  --color-text-on-accent: #ffffff;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --color-accent: #d4af37;
+  --color-accent-hover: #b8952e;
+  --color-accent-soft: rgba(212, 175, 55, 0.1);
+
+  --color-border-default: rgba(0, 0, 0, 0.08);
+  --color-border-subtle: rgba(0, 0, 0, 0.04);
+
+  /* Fonts */
+  --font-sans: "Inter", "system-ui", "sans-serif";
+  --font-heading: "Playfair Display", "serif";
+
+  /* Custom Shadows */
+  --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+@layer base {
+  body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
   }
 }
