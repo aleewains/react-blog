@@ -5,7 +5,7 @@ import { Button, Container } from "../components";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
-import { Edit3, Trash2, ArrowLeft } from "lucide-react";
+import { Pencil, Trash2, ArrowLeft } from "lucide-react";
 
 interface PostData {
   $id: string;
@@ -21,14 +21,16 @@ export default function Post() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const userData = useSelector((state: RootState) => state.auth.userData);
-
-  const isAuthor = post && userData ? post.userId === userData.$id : false;
+  const [isAuthor, setIsAuthor] = useState(false);
 
   useEffect(() => {
     if (slug) {
       service.getPost(slug).then((post) => {
         if (post) setPost(post as unknown as PostData);
         else navigate("/");
+        const isAuthor =
+          post && userData ? post.userId === userData.$id : false;
+        setIsAuthor(isAuthor);
       });
     }
   }, [slug, navigate]);
@@ -52,7 +54,7 @@ export default function Post() {
   return (
     <div className="bg-bg-primary min-h-screen pb-20">
       {/* Navigation & Actions Bar */}
-      <nav className="sticky top-0 z-50 bg-bg-primary/80 backdrop-blur-md border-b border-border-subtle mb-8">
+      <nav className="sticky top-20 z-50 bg-bg-primary/80 backdrop-blur-md border-b border-border-subtle mb-8">
         <Container>
           <div className="flex items-center justify-between h-16">
             <button
@@ -63,22 +65,21 @@ export default function Post() {
             </button>
 
             {isAuthor && (
-              <div className="flex gap-3">
+              <div className="flex items-center gap-2">
                 <Link to={`/edit-post/${post.$id}`}>
-                  <Button
-                    variant="secondary"
-                    className="px-4 py-1.5 text-xs gap-2 "
-                  >
-                    <Edit3 size={14} /> Edit
-                  </Button>
+                  <button className="flex items-center gap-2 px-3 py-1.5 text-[10px] uppercase tracking-wider font-bold rounded-md bg-bg-muted text-text-primary hover:bg-border transition-all">
+                    <Pencil size={12} />
+                    Edit
+                  </button>
                 </Link>
-                <Button
-                  variant="danger"
+
+                <button
                   onClick={deletePost}
-                  className="px-4 py-1.5 text-xs gap-2"
+                  className="flex items-center gap-2 px-3 py-1.5 text-[10px] uppercase tracking-wider font-bold rounded-md bg-red-50/50 text-red-500 hover:bg-red-50 transition-all"
                 >
-                  <Trash2 size={14} /> Delete
-                </Button>
+                  <Trash2 size={12} />
+                  Delete
+                </button>
               </div>
             )}
           </div>
@@ -122,7 +123,7 @@ export default function Post() {
           </div>
 
           {/* Content */}
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w mx-auto">
             <div
               className="rich-text-content prose prose-lg prose-neutral 
               prose-headings:font-heading prose-headings:font-normal prose-headings:text-text-primary

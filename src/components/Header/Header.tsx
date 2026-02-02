@@ -17,7 +17,7 @@ function Header() {
   return (
     <header className="sticky top-0 z-50 w-full bg-bg-primary/70 backdrop-blur-md border-b border-border-subtle">
       <Container>
-        <nav className="flex h-20 items-center justify-between">
+        <nav className="flex h-20 items-center justify-between ">
           {/* Logo Section */}
           <Link
             to="/"
@@ -62,13 +62,12 @@ function Header() {
                   ),
               )}
             </ul>
-
-            {authStatus && (
-              <div className="pl-6 border-l border-border-subtle">
-                <LogoutBtn />
-              </div>
-            )}
           </div>
+          {authStatus && (
+            <div className="pl-6 border-l border-border-subtle">
+              <LogoutBtn />
+            </div>
+          )}
         </nav>
       </Container>
     </header>
