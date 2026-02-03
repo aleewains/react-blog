@@ -47,7 +47,7 @@ function SignUp() {
       {/* Editorial Header */}
       <div className="mb-10 lg:mb-12">
         <div className="lg:hidden flex justify-center mb-6">
-          <Logo width="50px" />
+          <Logo />
         </div>
         <h1 className="font-heading text-4xl md:text-5xl text-text-primary tracking-tight">
           Begin your journey.
