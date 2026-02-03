@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import service from "../appwrite/config";
-import { Button, Container } from "../components";
+import { Container } from "../components";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
