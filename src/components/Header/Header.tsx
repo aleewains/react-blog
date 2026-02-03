@@ -14,64 +14,63 @@ function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-bg-primary/70 backdrop-blur-md border-b border-border-subtle">
-      <Container>
-        <nav className="flex h-20 items-center justify-between ">
-          {/* Logo Section */}
-          <Link
-            to="/"
-            className="transition-all duration-300 hover:scale-105 active:scale-95"
-          >
-            <Logo />
-          </Link>
+    <header className="px-12 sticky top-0 z-50 w-full bg-bg-primary/70 backdrop-blur-md border-b border-border-subtle">
+      <nav className="flex h-20 items-center justify-between ">
+        {/* Logo Section */}
+        <Link
+          to="/"
+          className="transition-all duration-300 hover:scale-105 active:scale-95"
+        >
+          <Logo />
+        </Link>
 
-          {/* Navigation Section */}
-          <div className="flex items-center gap-8">
-            <ul className="flex items-center gap-2">
-              {navItems.map(
-                (item) =>
-                  item.active && (
-                    <li key={item.name}>
-                      <NavLink
-                        to={item.url}
-                        className={({ isActive }) =>
-                          `relative px-4 py-2 text-[13px] uppercase tracking-[0.15em] font-semibold transition-all duration-300
+        {/* Navigation Section */}
+        <div className="flex items-center gap-8">
+          <ul className="flex items-center gap-2">
+            {navItems.map(
+              (item) =>
+                item.active && (
+                  <li key={item.name}>
+                    <NavLink
+                      to={item.url}
+                      className={({ isActive }) =>
+                        `relative px-4 py-2 text-[13px] uppercase tracking-[0.15em] font-semibold transition-all duration-300
                           ${
                             isActive
                               ? "text-text-primary"
                               : "text-text-muted hover:text-text-primary"
-                          }`
-                        }
-                      >
-                        {({ isActive }) => (
-                          <>
-                            {item.name}
-                            {/* Refined Indicator: A subtle dot or a thinner line */}
-                            <span
-                              className={`absolute left-1/2 -bottom-1 h-1 w-1 rounded-full bg-accent -translate-x-1/2 transition-all duration-500 ${
-                                isActive
-                                  ? "opacity-100 scale-100"
-                                  : "opacity-0 scale-0"
-                              }`}
-                            />
-                          </>
-                        )}
-                      </NavLink>
-                    </li>
-                  ),
-              )}
-            </ul>
-          </div>
-          <div className=" flex ">
-            {authStatus && (
-              <div className="pl-6 border-l border-border-subtle">
-                <LogoutBtn />
-              </div>
+                          }
+                              ${!authStatus && item.name === "Signup" ? "mr-12" : ""}`
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          {item.name}
+                          {/* Refined Indicator: A subtle dot or a thinner line */}
+                          <span
+                            className={`absolute left-1/2 -bottom-1 h-1 w-1 rounded-full bg-accent -translate-x-1/2 transition-all duration-500 ${
+                              isActive
+                                ? "opacity-100 scale-100"
+                                : "opacity-0 scale-0"
+                            }`}
+                          />
+                        </>
+                      )}
+                    </NavLink>
+                  </li>
+                ),
             )}
+          </ul>
+        </div>
+
+        {authStatus && (
+          <div className="pl-6 border-l border-border-subtle mr-12">
+            <LogoutBtn />
           </div>
-          <ThemeBtn />
-        </nav>
-      </Container>
+        )}
+
+        <ThemeBtn />
+      </nav>
     </header>
   );
 }

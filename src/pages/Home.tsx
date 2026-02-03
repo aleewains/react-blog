@@ -74,7 +74,7 @@ function Home() {
             </div>
 
             {/* Visual Decoration for Logged Out State */}
-            <div className="hidden lg:block relative aspect-square bg-bg-secondary rounded-2xl border border-border-subtle overflow-hidden">
+            <div className=" lg:block relative aspect-square bg-bg-secondary rounded-2xl border border-border-subtle overflow-hidden">
               <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-accent via-transparent to-transparent"></div>
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="font-heading text-[15rem] text-bg-muted select-none">

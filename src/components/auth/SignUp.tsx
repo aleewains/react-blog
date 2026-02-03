@@ -144,7 +144,7 @@ function SignUp() {
           </Link>
         </p>
 
-        <p className="mt-8 text-[10px] text-text-muted uppercase tracking-[0.2em] leading-relaxed max-w-xs">
+        <p className="mt-8 text-[10px] justify-self-center text-center text-text-muted uppercase tracking-[0.2em] leading-relaxed max-w-xs">
           By joining, you agree to our terms of service and editorial
           guidelines.
         </p>

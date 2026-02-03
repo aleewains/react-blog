@@ -10,11 +10,11 @@ function Footer() {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 mb-16">
           {/* Brand & Mission Column */}
-          <div className="md:col-span-12 lg:col-span-5  space-y-8 justify-self-center">
-            <div className="inline-block">
+          <div className="md:col-span-12 row-start-2 lg:row-start-1 lg:col-span-5  space-y-8 justify-items-center lg:justify-items-start lg:justify-self-start  ">
+            <div className="block">
               <Logo />
             </div>
-            <p className="text-text-secondary text-lg leading-relaxed max-w-lg">
+            <p className="text-text-secondary text-center lg:text-left text-lg leading-relaxed max-w-lg">
               A curated space for digital craftsmen, exploring the intersection
               of
               <span className="text-text-primary font-medium">
@@ -39,7 +39,7 @@ function Footer() {
           </div>
 
           {/* Navigation Links */}
-          <div className="grid grid-cols-2 md:grid-cols-3 md:col-span-12 lg:col-span-7 gap-8 justify-items-center">
+          <div className="grid grid-cols-3 md:grid-cols-3 md:col-span-12 lg:col-span-7 gap-8 justify-items-start sm:justify-items-center">
             {/* Journal Column */}
             <div className="space-y-6">
               <h3 className="text-[10px] uppercase tracking-[0.3em] font-bold text-accent">

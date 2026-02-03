@@ -11,7 +11,7 @@ function Login() {
       </div>
 
       {/* Right Column: The "Vibe" (Hidden on Mobile) */}
-      <div className="hidden lg:relative lg:flex flex-col justify-between p-20 bg-bg-secondary border-l border-border-subtle overflow-hidden">
+      <div className=" relative lg:relative flex lg:flex flex-col p-20 bg-bg-secondary border-l border-border-subtle overflow-hidden">
         {/* Background Image/Pattern */}
         <div className="absolute inset-0 z-0">
           <img

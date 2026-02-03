@@ -4,13 +4,13 @@ function SignUp() {
   return (
     <div className="grid min-h-[calc(100vh-64px)] w-full lg:grid-cols-2 overflow-hidden bg-bg-primary">
       {/* Left Column: The Image (The "Vision") */}
-      <div className="hidden lg:relative lg:flex flex-col justify-between p-20 bg-bg-secondary border-r border-border-subtle overflow-hidden">
+      <div className=" relative lg:relative flex lg:flex flex-col justify-between p-20 bg-bg-secondary border-r border-border-subtle overflow-hidden">
         {/* Background Image: Abstract & Inspiring */}
         <div className="absolute inset-0 z-0">
           <img
             src="https://images.unsplash.com/photo-1519643381401-22c77e60520e?q=80&w=2070"
             alt="Mountainscape Minimalist"
-            className="w-full h-full object-cover grayscale opacity-30"
+            className="w-full h-full object-cover grayscale opacity-30 mix-blend-multiply"
           />
           {/* Subtle gold-tinted gradient */}
           <div className="absolute inset-0 bg-linear-to-bl from-accent/10 via-transparent to-bg-secondary" />
@@ -40,7 +40,7 @@ function SignUp() {
       </div>
 
       {/* Right Column: The SignUp Form */}
-      <div className="flex items-center justify-center p-8 md:p-16 lg:p-24">
+      <div className="row-start-1 flex items-center justify-center p-8 md:p-16 lg:p-24">
         <div className="w-full max-w-md animate-in fade-in slide-in-from-right-4 duration-700">
           <SignUpComponent />
         </div>
