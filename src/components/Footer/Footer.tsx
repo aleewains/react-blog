@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import Logo from "../Logo";
 import { Instagram, Twitter, Github, Linkedin } from "lucide-react";
-import Container from "../container/Container";
 
 function Footer() {
   const currentYear = new Date().getFullYear();
@@ -13,7 +12,7 @@ function Footer() {
           {/* Brand & Mission Column */}
           <div className="md:col-span-12 lg:col-span-5  space-y-8 justify-self-center">
             <div className="inline-block">
-              <Logo width="120px" />
+              <Logo />
             </div>
             <p className="text-text-secondary text-lg leading-relaxed max-w-lg">
               A curated space for digital craftsmen, exploring the intersection

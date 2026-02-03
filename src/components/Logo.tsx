@@ -1,6 +1,4 @@
-import React from "react";
-
-function Logo({ width = "100px" }) {
+function Logo() {
   return (
     <div className="flex items-center gap-3 group cursor-pointer">
       <svg

@@ -4,11 +4,7 @@ import "./index.css";
 import App from "./App.tsx";
 import { Provider } from "react-redux";
 import store from "./redux/store.ts";
-import {
-  BrowserRouter,
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home.tsx";
 import AuthLayout from "./components/AuthLayout.tsx";
 import Login from "./pages/Login.tsx";

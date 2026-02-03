@@ -7,14 +7,14 @@ import type { RootState } from "../redux/store";
 import { Link } from "react-router-dom";
 
 // 1. Define the single Post structure
-interface Post {
-  $id: string;
-  title: string;
-  content: string;
-  featuredImage: string;
-  status: string;
-  userId: string;
-}
+// interface Post {
+//   $id: string;
+//   title: string;
+//   content: string;
+//   featuredImage: string;
+//   status: string;
+//   userId: string;
+// }
 
 function Home() {
   // 2. Set state to be an array of Post objects

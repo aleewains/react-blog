@@ -22,7 +22,7 @@ function Header() {
             to="/"
             className="transition-all duration-300 hover:scale-105 active:scale-95"
           >
-            <Logo width="60px" />
+            <Logo />
           </Link>
 
           {/* Navigation Section */}
