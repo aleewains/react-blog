@@ -1,37 +1,75 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors */
-  --color-bg-primary: #fafafb;
-  --color-bg-secondary: #ffffff;
-  --color-bg-muted: #f1f3f5;
+  /* Colors - Mapped to CSS Variables */
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-muted: var(--bg-muted);
 
-  --color-text-primary: #0e0f12;
-  --color-text-secondary: #444a57;
-  --color-text-muted: #6b7280;
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
   --color-text-on-accent: #ffffff;
 
   --color-accent: #d4af37;
   --color-accent-hover: #b8952e;
-  --color-accent-soft: rgba(212, 175, 55, 0.1);
+  --color-accent-soft: var(--accent-soft);
 
-  --color-border-default: rgba(0, 0, 0, 0.08);
-  --color-border-subtle: rgba(0, 0, 0, 0.04);
+  --color-border-default: var(--border-default);
+  --color-border-subtle: var(--border-subtle);
 
   /* Fonts */
   --font-sans: "Inter", "system-ui", "sans-serif";
   --font-heading: "Playfair Display", "serif";
 
   /* Custom Shadows */
-  --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  --shadow-soft: var(--shadow-val);
+  --shadow-premium: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
 }
 
 @layer base {
+  :root {
+    /* Light Mode Values */
+    --bg-primary: #fafafb;
+    --bg-secondary: #ffffff;
+    --bg-muted: #f1f3f5;
+
+    --text-primary: #0e0f12;
+    --text-secondary: #444a57;
+    --text-muted: #6b7280;
+
+    --accent-soft: rgba(212, 175, 55, 0.1);
+    --border-default: rgba(0, 0, 0, 0.08);
+    --border-subtle: rgba(0, 0, 0, 0.04);
+
+    --shadow-val: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .dark {
+    /* Dark Mode Values - The "Studio" Night Mood */
+    --bg-primary: #0a0a0b; /* Deep Obsidian */
+    --bg-secondary: #121214;
+    --bg-muted: #1c1c1f;
+
+    --text-primary: #f1f3f5;
+    --text-secondary: #a1a1aa;
+    --text-muted: #636366;
+
+    --accent-soft: rgba(212, 175, 55, 0.15);
+    --border-default: rgba(255, 255, 255, 0.1);
+    --border-subtle: rgba(255, 255, 255, 0.05);
+
+    --shadow-val: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+  }
+
   body {
     background-color: var(--color-bg-primary);
     color: var(--color-text-primary);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 
   h1,

@@ -11,6 +11,7 @@ import SignUp from "./auth/SignUp";
 import Login from "./auth/Login";
 import PostForm from "./post-form/PostForm";
 import PostCard from "./PostCard";
+import ThemeBtn from "./ThemeBtn";
 
 export {
   Header,
@@ -26,4 +27,5 @@ export {
   Login,
   PostForm,
   PostCard,
+  ThemeBtn,
 };

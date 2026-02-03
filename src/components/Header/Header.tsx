@@ -1,8 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
-import { Container, LogoutBtn, Logo } from "../index";
+import { Container, LogoutBtn, Logo, ThemeBtn } from "../index";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
-
 function Header() {
   const authStatus = useSelector((state: RootState) => state.auth.status);
 
@@ -21,7 +20,7 @@ function Header() {
           {/* Logo Section */}
           <Link
             to="/"
-            className="transition-transform duration-300 hover:scale-105 active:scale-95"
+            className="transition-all duration-300 hover:scale-105 active:scale-95"
           >
             <Logo width="60px" />
           </Link>
@@ -63,11 +62,14 @@ function Header() {
               )}
             </ul>
           </div>
-          {authStatus && (
-            <div className="pl-6 border-l border-border-subtle">
-              <LogoutBtn />
-            </div>
-          )}
+          <div className="flex ">
+            {authStatus && (
+              <div className="pl-6 border-l border-border-subtle">
+                <LogoutBtn />
+              </div>
+            )}
+            <ThemeBtn />
+          </div>
         </nav>
       </Container>
     </header>

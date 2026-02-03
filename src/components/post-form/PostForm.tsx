@@ -135,7 +135,7 @@ function PostForm({ post }: PostFormProps) {
             type="submit"
             isLoading={isSubmitting}
             variant={post ? "secondary" : "primary"}
-            className="flex-1 md:flex-none px-8"
+            className="flex-1 md:flex-none px-8 cursor-pointer"
             leftIcon={post ? <Save size={18} /> : <Send size={18} />}
           >
             {post ? "Update Entry" : "Publish to Journal"}

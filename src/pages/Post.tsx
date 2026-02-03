@@ -67,7 +67,7 @@ export default function Post() {
             {isAuthor && (
               <div className="flex items-center gap-2">
                 <Link to={`/edit-post/${post.$id}`}>
-                  <button className="flex items-center gap-2 px-3 py-1.5 text-[10px] uppercase tracking-wider font-bold rounded-md bg-bg-muted text-text-primary hover:bg-border transition-all">
+                  <button className="flex items-center gap-2 px-3 py-1.5 text-[10px] uppercase tracking-wider font-bold rounded-md bg-bg-muted text-text-primary hover:bg-border transition-all cursor-pointer">
                     <Pencil size={12} />
                     Edit
                   </button>
@@ -75,7 +75,8 @@ export default function Post() {
 
                 <button
                   onClick={deletePost}
-                  className="flex items-center gap-2 px-3 py-1.5 text-[10px] uppercase tracking-wider font-bold rounded-md bg-red-50/50 text-red-500 hover:bg-red-50 transition-all"
+                  className="flex items-center gap-2 px-4 py-2 text-[11px] uppercase tracking-widest font-bold rounded-lg
+                  text-red-500 border border-red-500/20 hover:bg-red-500/10 hover:border-red-500/40 transition-all duration-300 cursor-pointer"
                 >
                   <Trash2 size={12} />
                   Delete

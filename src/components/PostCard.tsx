@@ -34,7 +34,7 @@ function PostCard({ $id, title, featuredImage, $createdAt }: Post) {
             "
           />
           {/* Subtle Overlay Icon */}
-          <div className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+          <div className="absolute top-4 right-4 p-2 bg-bg-secondary backdrop-blur-sm rounded-full opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
             <ArrowUpRight size={16} className="text-text-primary" />
           </div>
         </div>
