@@ -62,14 +62,14 @@ function Header() {
               )}
             </ul>
           </div>
-          <div className="flex ">
+          <div className=" flex ">
             {authStatus && (
               <div className="pl-6 border-l border-border-subtle">
                 <LogoutBtn />
               </div>
             )}
-            <ThemeBtn />
           </div>
+          <ThemeBtn />
         </nav>
       </Container>
     </header>
