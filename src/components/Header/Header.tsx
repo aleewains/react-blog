@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import { Container, LogoutBtn, Logo, ThemeBtn } from "../index";
+import { LogoutBtn, Logo, ThemeBtn } from "../index";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
 function Header() {
